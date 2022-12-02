@@ -1,31 +1,23 @@
 import pytest
 
-class Phonebook:
+from phonebook import Phonebook
 
-    def __init__(self) -> None:
-        self.numbers = {}
+@pytest.fixture
+def phonebook(tmpdir):
+    return Phonebook(tmpdir)
+    # yield phonebook
+    # phonebook.clear()
 
-    def add(self, name, number):
-        self.numbers[name] = number
-
-    def lookup(self, name):
-        return self.numbers[name]
-
-    def names(self):
-        return set(self.numbers.keys())
-
-def test_check_by_name():
-    phonebook = Phonebook()
+def test_check_by_name(phonebook):
     phonebook.add("Jarri", "1234567890")
     assert "1234567890" == phonebook.lookup("Jarri")
 
-def test_phonebook_have_all_names():
-    phonebook = Phonebook()
+def test_phonebook_have_all_names(phonebook):
     phonebook.add("Jarri", "1234567890")
     assert "Jarri" in phonebook.names()
 
-def test_missing_name_error():
-    phonebook = Phonebook()
+
+def test_missing_name_error(phonebook):
     with pytest.raises(KeyError):
         phonebook.lookup("Jarri")
 
